@@ -1,0 +1,916 @@
+<title>TikTok Content Manager</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: single-column dashboard, card grid for content items, sticky header */
+  :root {
+    --bg: #fafaf9;
+    --bg-card: #ffffff;
+    --bg-input: #f5f5f4;
+    --fg: #1c1917;
+    --fg-muted: #78716c;
+    --fg-dim: #a8a29e;
+    --accent: #e11d48;
+    --accent-soft: #ffe4e6;
+    --accent-text: #be123c;
+    --success: #16a34a;
+    --success-soft: #dcfce7;
+    --warning: #d97706;
+    --warning-soft: #fef3c7;
+    --border: #e7e5e4;
+    --shadow: 0 1px 3px rgba(28,25,23,.08);
+    --radius: 10px;
+    font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1a1a1a;
+      --bg-card: #262626;
+      --bg-input: #333333;
+      --fg: #fafaf9;
+      --fg-muted: #a8a29e;
+      --fg-dim: #6b6560;
+      --accent: #fb7185;
+      --accent-soft: #4c1d2e;
+      --accent-text: #fda4af;
+      --success: #4ade80;
+      --success-soft: #14532d;
+      --warning: #fbbf24;
+      --warning-soft: #451a03;
+      --border: #3a3a3a;
+      --shadow: 0 1px 3px rgba(0,0,0,.3);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1a1a1a;
+    --bg-card: #262626;
+    --bg-input: #333333;
+    --fg: #fafaf9;
+    --fg-muted: #a8a29e;
+    --fg-dim: #6b6560;
+    --accent: #fb7185;
+    --accent-soft: #4c1d2e;
+    --accent-text: #fda4af;
+    --success: #4ade80;
+    --success-soft: #14532d;
+    --warning: #fbbf24;
+    --warning-soft: #451a03;
+    --border: #3a3a3a;
+    --shadow: 0 1px 3px rgba(0,0,0,.3);
+    color-scheme: dark;
+  }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    margin: 0;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 0;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0 0 auto;
+    height: env(safe-area-inset-top, 0px);
+    z-index: 10;
+    background: var(--bg);
+  }
+  * { box-sizing: border-box; }
+  code, .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* Header */
+  .header {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 9;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .header h1 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: -0.02em;
+  }
+  .header h1 .logo {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 14px; font-weight: 700;
+  }
+
+  /* Setup panel */
+  .setup-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 16px 0;
+    box-shadow: var(--shadow);
+  }
+  .setup-panel h2 {
+    font-size: 15px; font-weight: 600; margin: 0 0 12px;
+  }
+  .setup-panel p {
+    font-size: 13px; color: var(--fg-muted); margin: 0 0 16px;
+  }
+  .form-group { margin-bottom: 14px; }
+  .form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--fg-muted);
+    margin-bottom: 4px;
+  }
+  .form-group input, .form-group textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-input);
+    color: var(--fg);
+    font-family: inherit;
+    font-size: 14px;
+  }
+  .form-group input:focus, .form-group textarea:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: -1px;
+    border-color: transparent;
+  }
+  .form-group textarea { resize: vertical; min-height: 60px; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity .15s;
+  }
+  .btn:hover { opacity: .85; }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-secondary { background: var(--bg-input); color: var(--fg); border: 1px solid var(--border); }
+  .btn-small { padding: 5px 10px; font-size: 12px; }
+  .btn-icon { padding: 6px; width: 32px; height: 32px; justify-content: center; }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 2px;
+    margin: 16px 0 0;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  .tab {
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fg-muted);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+  }
+  .tab:hover { color: var(--fg); }
+  .tab.active {
+    color: var(--accent-text);
+    border-bottom-color: var(--accent);
+  }
+  .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+  /* Stats bar */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    box-shadow: var(--shadow);
+  }
+  .stat-card .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--fg-muted);
+  }
+  .stat-card .stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    margin-top: 2px;
+    letter-spacing: -0.02em;
+  }
+
+  /* Content list */
+  .content-list { margin: 16px 0; display: flex; flex-direction: column; gap: 8px; }
+  .content-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    box-shadow: var(--shadow);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    align-items: start;
+  }
+  @media (max-width: 500px) {
+    .content-item {
+      grid-template-columns: 1fr;
+    }
+    .content-item .item-actions {
+      justify-self: start;
+    }
+  }
+  .item-date {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--fg-muted);
+    padding-top: 2px;
+    white-space: nowrap;
+  }
+  .item-body { min-width: 0; }
+  .item-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    word-wrap: break-word;
+  }
+  .item-caption {
+    font-size: 13px;
+    color: var(--fg-muted);
+    margin: 0 0 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-wrap: break-word;
+  }
+  .item-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .tag {
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .tag-pillar {
+    background: var(--accent-soft);
+    color: var(--accent-text);
+  }
+  .tag-status {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .tag-pending { background: var(--warning-soft); color: var(--warning); }
+  .tag-posted { background: var(--success-soft); color: var(--success); }
+  .tag-hashtag { background: var(--bg-input); color: var(--fg-muted); }
+
+  .item-actions {
+    display: flex; gap: 4px; align-items: center;
+  }
+
+  /* Add form modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay[hidden] { display: none !important; }
+  .modal {
+    background: var(--bg-card);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.2);
+  }
+  .modal h2 { font-size: 16px; font-weight: 700; margin: 0 0 16px; }
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 16px;
+  }
+
+  /* Pillar select */
+  .pillar-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .pillar-option {
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-input);
+    color: var(--fg);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color .15s;
+  }
+  .pillar-option:hover { border-color: var(--accent); }
+  .pillar-option.selected {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent-text);
+  }
+  .pillar-option:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--fg-muted);
+  }
+  .empty-state p { margin: 4px 0; }
+  .empty-state .empty-icon { font-size: 32px; margin-bottom: 8px; }
+
+  /* Google Sheet link */
+  .sheet-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin: 12px 0;
+    font-size: 13px;
+  }
+  .sheet-link a {
+    color: var(--accent-text);
+    text-decoration: none;
+    font-weight: 500;
+    word-break: break-all;
+  }
+  .sheet-link a:hover { text-decoration: underline; }
+
+  /* Copy toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--fg);
+    color: var(--bg);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 30;
+    transition: transform .3s ease;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Week nav */
+  .week-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 16px 0 8px;
+  }
+  .week-label {
+    font-size: 14px;
+    font-weight: 600;
+    flex: 1;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+  }
+</style>
+
+<!-- Header -->
+<div class="header">
+  <h1>
+    <span class="logo">M</span>
+    TikTok @mit.anh8
+  </h1>
+  <div style="display:flex;gap:6px">
+    <button class="btn btn-primary btn-small" onclick="openAddModal()">+ Thêm bài</button>
+  </div>
+</div>
+
+<!-- Setup: Google Sheet URL -->
+<div id="setupPanel" class="setup-panel">
+  <h2>Kết nối Google Sheet</h2>
+  <p>Tạo Google Sheet, deploy Apps Script Web App, dán URL vào đây. Dữ liệu sẽ đồng bộ 2 chiều.</p>
+  <div class="form-group">
+    <label for="sheetUrl">Apps Script Web App URL</label>
+    <input type="url" id="sheetUrl" placeholder="https://script.google.com/macros/s/…/exec">
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn btn-primary" onclick="saveSheetUrl()">Lưu & kết nối</button>
+    <button class="btn btn-secondary" onclick="useLocalOnly()">Dùng offline trước</button>
+  </div>
+</div>
+
+<!-- Connected sheet link -->
+<div id="sheetInfo" class="sheet-link" hidden>
+  <span style="font-size:16px">📊</span>
+  <span>Sheet: <a id="sheetLinkA" href="#" target="_blank" rel="noopener">Đã kết nối</a></span>
+  <button class="btn btn-small btn-secondary" onclick="syncFromSheet()" style="margin-left:auto">Đồng bộ</button>
+  <button class="btn btn-small btn-secondary" onclick="disconnectSheet()">Ngắt</button>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab active" data-tab="calendar" onclick="switchTab('calendar')">Lịch đăng</button>
+  <button class="tab" data-tab="all" onclick="switchTab('all')">Tất cả</button>
+  <button class="tab" data-tab="pending" onclick="switchTab('pending')">Chưa đăng</button>
+  <button class="tab" data-tab="posted" onclick="switchTab('posted')">Đã đăng</button>
+</div>
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="stat-label">Tổng bài</div>
+    <div class="stat-value" id="statTotal">0</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Chưa đăng</div>
+    <div class="stat-value" id="statPending">0</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Đã đăng</div>
+    <div class="stat-value" id="statPosted">0</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Tuần này</div>
+    <div class="stat-value" id="statWeek">0</div>
+  </div>
+</div>
+
+<!-- Week navigation (for calendar tab) -->
+<div id="weekNav" class="week-nav">
+  <button class="btn btn-icon btn-secondary" onclick="changeWeek(-1)" aria-label="Tuần trước">&larr;</button>
+  <span class="week-label" id="weekLabel"></span>
+  <button class="btn btn-icon btn-secondary" onclick="changeWeek(1)" aria-label="Tuần sau">&rarr;</button>
+  <button class="btn btn-small btn-secondary" onclick="changeWeek(0)">Hôm nay</button>
+</div>
+
+<!-- Content list -->
+<div class="content-list" id="contentList"></div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" id="modalOverlay" hidden>
+  <div class="modal">
+    <h2 id="modalTitle">Thêm bài mới</h2>
+    <input type="hidden" id="editId">
+
+    <div class="form-group">
+      <label>Trụ nội dung</label>
+      <div class="pillar-grid" id="pillarGrid">
+        <button class="pillar-option" data-pillar="Tổng hợp CT" onclick="selectPillar(this)">📊 Tổng hợp CT</button>
+        <button class="pillar-option" data-pillar="Giải đề bundle" onclick="selectPillar(this)">📝 Giải đề bundle</button>
+        <button class="pillar-option" data-pillar="Mẹo Casio" onclick="selectPillar(this)">⚡ Mẹo Casio</button>
+        <button class="pillar-option" data-pillar="Myth vs Fact" onclick="selectPillar(this)">❓ Myth vs Fact</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="postDate">Ngày đăng</label>
+      <input type="date" id="postDate">
+    </div>
+
+    <div class="form-group">
+      <label for="postTime">Giờ đăng</label>
+      <input type="time" id="postTime" value="19:30">
+    </div>
+
+    <div class="form-group">
+      <label for="postTitle">Tiêu đề</label>
+      <input type="text" id="postTitle" placeholder="VD: Tổng hợp công thức Đạo hàm">
+    </div>
+
+    <div class="form-group">
+      <label for="postCaption">Caption</label>
+      <textarea id="postCaption" rows="3" placeholder="Caption cho TikTok..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="postHashtags">Hashtags</label>
+      <input type="text" id="postHashtags" placeholder="#EduTok #ToánTHPT #MitAnhToan" value="#EduTok #LearnOnTikTok #ToánTHPT #ÔnThi2026 #MitAnhToan">
+    </div>
+
+    <div class="form-group">
+      <label for="postSlideUrl">Link slides (Google Drive)</label>
+      <input type="url" id="postSlideUrl" placeholder="https://drive.google.com/...">
+    </div>
+
+    <div class="form-group">
+      <label for="postHook">Hook (1-3 giây đầu)</label>
+      <input type="text" id="postHook" placeholder="VD: 5 công thức này giúp bạn làm đúng 90% bài Hàm số">
+    </div>
+
+    <div class="form-group">
+      <label for="postCta">CTA</label>
+      <input type="text" id="postCta" placeholder="VD: Save lại để ôn thi!" value="Save lại để ôn thi!">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Hủy</button>
+      <button class="btn btn-primary" onclick="savePost()">Lưu</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const PILLARS = ['Tổng hợp CT', 'Giải đề bundle', 'Mẹo Casio', 'Myth vs Fact'];
+const PILLAR_ICONS = {'Tổng hợp CT':'📊','Giải đề bundle':'📝','Mẹo Casio':'⚡','Myth vs Fact':'❓'};
+
+let posts = [];
+let currentTab = 'calendar';
+let weekOffset = 0;
+let sheetApiUrl = '';
+
+// ---- Storage ----
+function loadData() {
+  try {
+    const saved = localStorage.getItem('tiktok_posts');
+    if (saved) posts = JSON.parse(saved);
+    sheetApiUrl = localStorage.getItem('tiktok_sheet_url') || '';
+  } catch(e) {}
+}
+
+function saveData() {
+  try {
+    localStorage.setItem('tiktok_posts', JSON.stringify(posts));
+    if (sheetApiUrl) localStorage.setItem('tiktok_sheet_url', sheetApiUrl);
+  } catch(e) {}
+}
+
+// ---- Sheet connection ----
+function saveSheetUrl() {
+  const url = document.getElementById('sheetUrl').value.trim();
+  if (!url) return;
+  sheetApiUrl = url;
+  try { localStorage.setItem('tiktok_sheet_url', url); } catch(e) {}
+  updateSetupUI();
+  syncFromSheet();
+}
+
+function useLocalOnly() {
+  document.getElementById('setupPanel').hidden = true;
+}
+
+function disconnectSheet() {
+  sheetApiUrl = '';
+  try { localStorage.removeItem('tiktok_sheet_url'); } catch(e) {}
+  updateSetupUI();
+}
+
+function updateSetupUI() {
+  const hasSheet = !!sheetApiUrl;
+  document.getElementById('setupPanel').hidden = hasSheet;
+  document.getElementById('sheetInfo').hidden = !hasSheet;
+  if (hasSheet) {
+    document.getElementById('sheetLinkA').href = sheetApiUrl;
+    document.getElementById('sheetLinkA').textContent = sheetApiUrl.substring(0, 50) + '…';
+  }
+}
+
+async function syncToSheet(post) {
+  if (!sheetApiUrl) return;
+  try {
+    await fetch(sheetApiUrl, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain'},
+      body: JSON.stringify({action: 'upsert', data: post})
+    });
+  } catch(e) { console.warn('Sync to sheet failed:', e); }
+}
+
+async function syncFromSheet() {
+  if (!sheetApiUrl) return;
+  try {
+    const r = await fetch(sheetApiUrl + '?action=getAll');
+    const data = await r.json();
+    if (Array.isArray(data)) {
+      posts = data;
+      saveData();
+      render();
+      showToast('Đã đồng bộ ' + data.length + ' bài');
+    }
+  } catch(e) {
+    showToast('Lỗi đồng bộ — kiểm tra URL');
+  }
+}
+
+// ---- Posts CRUD ----
+function generateId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+}
+
+function openAddModal(prefillDate) {
+  document.getElementById('modalTitle').textContent = 'Thêm bài mới';
+  document.getElementById('editId').value = '';
+  document.getElementById('postDate').value = prefillDate || new Date().toISOString().split('T')[0];
+  document.getElementById('postTime').value = '19:30';
+  document.getElementById('postTitle').value = '';
+  document.getElementById('postCaption').value = '';
+  document.getElementById('postHashtags').value = '#EduTok #LearnOnTikTok #ToánTHPT #ÔnThi2026 #MitAnhToan';
+  document.getElementById('postSlideUrl').value = '';
+  document.getElementById('postHook').value = '';
+  document.getElementById('postCta').value = 'Save lại để ôn thi!';
+  document.querySelectorAll('.pillar-option').forEach(b => b.classList.remove('selected'));
+  document.getElementById('modalOverlay').hidden = false;
+}
+
+function openEditModal(id) {
+  const post = posts.find(p => p.id === id);
+  if (!post) return;
+  document.getElementById('modalTitle').textContent = 'Sửa bài';
+  document.getElementById('editId').value = id;
+  document.getElementById('postDate').value = post.date;
+  document.getElementById('postTime').value = post.time || '19:30';
+  document.getElementById('postTitle').value = post.title;
+  document.getElementById('postCaption').value = post.caption || '';
+  document.getElementById('postHashtags').value = post.hashtags || '';
+  document.getElementById('postSlideUrl').value = post.slideUrl || '';
+  document.getElementById('postHook').value = post.hook || '';
+  document.getElementById('postCta').value = post.cta || '';
+  document.querySelectorAll('.pillar-option').forEach(b => {
+    b.classList.toggle('selected', b.dataset.pillar === post.pillar);
+  });
+  document.getElementById('modalOverlay').hidden = false;
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').hidden = true;
+}
+
+function selectPillar(btn) {
+  document.querySelectorAll('.pillar-option').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function savePost() {
+  const id = document.getElementById('editId').value;
+  const pillarBtn = document.querySelector('.pillar-option.selected');
+  const post = {
+    id: id || generateId(),
+    pillar: pillarBtn ? pillarBtn.dataset.pillar : 'Tổng hợp CT',
+    date: document.getElementById('postDate').value,
+    time: document.getElementById('postTime').value || '19:30',
+    title: document.getElementById('postTitle').value.trim(),
+    caption: document.getElementById('postCaption').value.trim(),
+    hashtags: document.getElementById('postHashtags').value.trim(),
+    slideUrl: document.getElementById('postSlideUrl').value.trim(),
+    hook: document.getElementById('postHook').value.trim(),
+    cta: document.getElementById('postCta').value.trim(),
+    status: 'pending'
+  };
+
+  if (!post.title || !post.date) {
+    showToast('Cần có tiêu đề và ngày đăng');
+    return;
+  }
+
+  if (id) {
+    const idx = posts.findIndex(p => p.id === id);
+    if (idx >= 0) { post.status = posts[idx].status; posts[idx] = post; }
+  } else {
+    posts.push(post);
+  }
+
+  saveData();
+  syncToSheet(post);
+  closeModal();
+  render();
+  showToast(id ? 'Đã cập nhật' : 'Đã thêm bài mới');
+}
+
+function toggleStatus(id) {
+  const post = posts.find(p => p.id === id);
+  if (!post) return;
+  post.status = post.status === 'posted' ? 'pending' : 'posted';
+  saveData();
+  syncToSheet(post);
+  render();
+}
+
+function deletePost(id) {
+  posts = posts.filter(p => p.id !== id);
+  saveData();
+  render();
+}
+
+function copyCaption(id) {
+  const post = posts.find(p => p.id === id);
+  if (!post) return;
+  const fullCaption = [post.hook, '', post.caption, '', post.cta, '', post.hashtags].filter(Boolean).join('\n');
+  try {
+    navigator.clipboard.writeText(fullCaption).then(() => showToast('Đã copy caption'));
+  } catch(e) {
+    // fallback: select text
+    const ta = document.createElement('textarea');
+    ta.value = fullCaption;
+    document.body.appendChild(ta);
+    ta.select();
+    document.body.removeChild(ta);
+    showToast('Chọn text để copy');
+  }
+}
+
+// ---- Rendering ----
+function getWeekRange(offset) {
+  const now = new Date();
+  const day = now.getDay() || 7;
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - day + 1 + offset * 7);
+  monday.setHours(0,0,0,0);
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  return {start: monday, end: sunday};
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const days = ['CN','T2','T3','T4','T5','T6','T7'];
+  return days[d.getDay()] + ' ' + d.getDate() + '/' + (d.getMonth()+1);
+}
+
+function formatWeekLabel(range) {
+  const s = range.start, e = range.end;
+  return (s.getDate()+'/'+(s.getMonth()+1)) + ' — ' + (e.getDate()+'/'+(e.getMonth()+1)+'/'+ e.getFullYear());
+}
+
+function getFilteredPosts() {
+  let filtered = [...posts];
+  if (currentTab === 'calendar') {
+    const range = getWeekRange(weekOffset);
+    filtered = filtered.filter(p => {
+      const d = new Date(p.date + 'T00:00:00');
+      return d >= range.start && d <= range.end;
+    });
+  } else if (currentTab === 'pending') {
+    filtered = filtered.filter(p => p.status !== 'posted');
+  } else if (currentTab === 'posted') {
+    filtered = filtered.filter(p => p.status === 'posted');
+  }
+  filtered.sort((a, b) => a.date.localeCompare(b.date) || (a.time||'').localeCompare(b.time||''));
+  return filtered;
+}
+
+function renderPost(post) {
+  const icon = PILLAR_ICONS[post.pillar] || '📌';
+  const statusTag = post.status === 'posted'
+    ? '<span class="tag tag-status tag-posted">Đã đăng</span>'
+    : '<span class="tag tag-status tag-pending">Chờ đăng</span>';
+
+  return `
+    <div class="content-item">
+      <div class="item-date">${formatDate(post.date)}<br><span class="mono" style="font-size:11px">${post.time || ''}</span></div>
+      <div class="item-body">
+        <p class="item-title">${icon} ${escHtml(post.title)}</p>
+        <p class="item-caption">${escHtml(post.caption || post.hook || '')}</p>
+        <div class="item-tags">
+          <span class="tag tag-pillar">${escHtml(post.pillar)}</span>
+          ${statusTag}
+          ${(post.hashtags||'').split(/\s+/).slice(0,3).map(h => h ? '<span class="tag tag-hashtag">'+escHtml(h)+'</span>' : '').join('')}
+        </div>
+      </div>
+      <div class="item-actions">
+        <button class="btn btn-icon btn-secondary" onclick="copyCaption('${post.id}')" title="Copy caption">📋</button>
+        <button class="btn btn-icon btn-secondary" onclick="toggleStatus('${post.id}')" title="${post.status==='posted'?'Đánh chưa đăng':'Đánh đã đăng'}">${post.status==='posted'?'↩':'✓'}</button>
+        <button class="btn btn-icon btn-secondary" onclick="openEditModal('${post.id}')" title="Sửa">✏️</button>
+        <button class="btn btn-icon btn-secondary" onclick="if(window.confirm?.('Xóa?')!==false||true)deletePost('${post.id}')" title="Xóa" style="color:var(--accent)">✕</button>
+      </div>
+    </div>`;
+}
+
+function render() {
+  // Stats
+  document.getElementById('statTotal').textContent = posts.length;
+  document.getElementById('statPending').textContent = posts.filter(p => p.status !== 'posted').length;
+  document.getElementById('statPosted').textContent = posts.filter(p => p.status === 'posted').length;
+  const thisWeek = getWeekRange(0);
+  document.getElementById('statWeek').textContent = posts.filter(p => {
+    const d = new Date(p.date + 'T00:00:00');
+    return d >= thisWeek.start && d <= thisWeek.end;
+  }).length;
+
+  // Week nav
+  const weekNav = document.getElementById('weekNav');
+  weekNav.hidden = currentTab !== 'calendar';
+  if (currentTab === 'calendar') {
+    document.getElementById('weekLabel').textContent = formatWeekLabel(getWeekRange(weekOffset));
+  }
+
+  // Tabs
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === currentTab);
+  });
+
+  // List
+  const filtered = getFilteredPosts();
+  const list = document.getElementById('contentList');
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">📭</div>
+      <p style="font-weight:600">Chưa có bài nào</p>
+      <p style="font-size:13px">Nhấn "+ Thêm bài" để lên lịch content</p>
+    </div>`;
+  } else {
+    list.innerHTML = filtered.map(renderPost).join('');
+  }
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  render();
+}
+
+function changeWeek(dir) {
+  if (dir === 0) weekOffset = 0;
+  else weekOffset += dir;
+  render();
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ---- Delete confirmation (confirm() returns false in artifact) ----
+// Handled inline: always delete since confirm returns false
+
+// ---- Init ----
+loadData();
+updateSetupUI();
+render();
+
+// Close modal on overlay click
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// Close modal on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
