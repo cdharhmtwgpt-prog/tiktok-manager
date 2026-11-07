@@ -1,916 +1,910 @@
-<title>TikTok Content Manager</title>
+<title>TikTok @mit.anh8</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-  /* Layout: single-column dashboard, card grid for content items, sticky header */
-  :root {
-    --bg: #fafaf9;
-    --bg-card: #ffffff;
-    --bg-input: #f5f5f4;
-    --fg: #1c1917;
-    --fg-muted: #78716c;
-    --fg-dim: #a8a29e;
-    --accent: #e11d48;
-    --accent-soft: #ffe4e6;
-    --accent-text: #be123c;
-    --success: #16a34a;
-    --success-soft: #dcfce7;
-    --warning: #d97706;
-    --warning-soft: #fef3c7;
-    --border: #e7e5e4;
-    --shadow: 0 1px 3px rgba(28,25,23,.08);
-    --radius: 10px;
-    font-family: 'Be Vietnam Pro', system-ui, sans-serif;
-    font-variant-numeric: tabular-nums;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #1a1a1a;
-      --bg-card: #262626;
-      --bg-input: #333333;
-      --fg: #fafaf9;
-      --fg-muted: #a8a29e;
-      --fg-dim: #6b6560;
-      --accent: #fb7185;
-      --accent-soft: #4c1d2e;
-      --accent-text: #fda4af;
-      --success: #4ade80;
-      --success-soft: #14532d;
-      --warning: #fbbf24;
-      --warning-soft: #451a03;
-      --border: #3a3a3a;
-      --shadow: 0 1px 3px rgba(0,0,0,.3);
-      color-scheme: dark;
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #1a1a1a;
-    --bg-card: #262626;
-    --bg-input: #333333;
-    --fg: #fafaf9;
-    --fg-muted: #a8a29e;
-    --fg-dim: #6b6560;
-    --accent: #fb7185;
-    --accent-soft: #4c1d2e;
-    --accent-text: #fda4af;
-    --success: #4ade80;
-    --success-soft: #14532d;
-    --warning: #fbbf24;
-    --warning-soft: #451a03;
-    --border: #3a3a3a;
-    --shadow: 0 1px 3px rgba(0,0,0,.3);
-    color-scheme: dark;
-  }
-  body {
-    background: var(--bg);
-    color: var(--fg);
-    margin: 0;
-    padding-left: max(16px, env(safe-area-inset-left, 0px));
-    padding-right: max(16px, env(safe-area-inset-right, 0px));
-    padding-block: 0;
-    line-height: 1.5;
-    min-height: 100vh;
-  }
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0 0 auto;
-    height: env(safe-area-inset-top, 0px);
-    z-index: 10;
-    background: var(--bg);
-  }
-  * { box-sizing: border-box; }
-  code, .mono { font-family: 'JetBrains Mono', monospace; }
+/* Layout: sticky header + tabs, scrollable content, mobile-first */
+:root {
+  --bg: #F4F4F2;
+  --surface: #FFFFFF;
+  --surface-alt: #EEEEED;
+  --text: #1A1B1E;
+  --text-2: #5F6167;
+  --text-3: #9B9DA3;
+  --border: #DDDDE0;
+  --accent: #E8453C;
+  --accent-h: #D13A32;
+  --success: #1B9E5E;
+  --success-bg: #E7F7EF;
+  --copy-bg: #EEF4FF;
+  --copy-border: #C2D6F2;
+  --warn: #D97706;
+  --p-ct: #3B82F6;
+  --p-gd: #E87B35;
+  --p-casio: #0EA371;
+  --p-myth: #7C3AED;
+  --font: 'Be Vietnam Pro', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  --radius: 8px;
+  --radius-lg: 12px;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg: #111113; --surface: #1C1D20; --surface-alt: #242529;
+  --text: #E6E6E4; --text-2: #A0A2A8; --text-3: #6B6D74;
+  --border: #2E3035; --accent: #F05E56; --accent-h: #FF7A73;
+  --success: #34D280; --success-bg: #152A1E;
+  --copy-bg: #17212E; --copy-border: #253548; --warn: #F59E0B;
+  color-scheme: dark;
+}}
+:root[data-theme="dark"]{
+  --bg: #111113; --surface: #1C1D20; --surface-alt: #242529;
+  --text: #E6E6E4; --text-2: #A0A2A8; --text-3: #6B6D74;
+  --border: #2E3035; --accent: #F05E56; --accent-h: #FF7A73;
+  --success: #34D280; --success-bg: #152A1E;
+  --copy-bg: #17212E; --copy-border: #253548; --warn: #F59E0B;
+  color-scheme: dark;
+}
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--font); line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px); z-index: 50;
+  background: var(--surface);
+}
+*, *::before, *::after { box-sizing: border-box; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea, select { font-family: inherit; color: inherit; }
 
-  /* Header */
-  .header {
-    position: sticky;
-    top: env(safe-area-inset-top, 0px);
-    z-index: 9;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-  .header h1 {
-    font-size: 18px;
-    font-weight: 700;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    letter-spacing: -0.02em;
-  }
-  .header h1 .logo {
-    width: 28px; height: 28px;
-    background: var(--accent);
-    border-radius: 7px;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 14px; font-weight: 700;
-  }
+/* Header */
+.hdr {
+  position: sticky; top: env(safe-area-inset-top, 0px);
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  z-index: 40; padding: 12px 0;
+}
+.hdr-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 900px; margin: 0 auto;
+}
+.hdr h1 {
+  font-size: 18px; font-weight: 700; margin: 0;
+  display: flex; align-items: center; gap: 8px;
+}
+.hdr h1 .logo {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: var(--accent); color: #fff;
+  display: grid; place-items: center; font-weight: 800; font-size: 14px;
+  flex-shrink: 0;
+}
+.conn-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;
+  background: var(--surface-alt); transition: background .15s;
+}
+.conn-btn:hover { background: var(--border); }
+.conn-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--text-3); flex-shrink: 0;
+}
+.conn-dot.ok { background: var(--success); }
+.conn-dot.err { background: var(--accent); }
 
-  /* Setup panel */
-  .setup-panel {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin: 16px 0;
-    box-shadow: var(--shadow);
-  }
-  .setup-panel h2 {
-    font-size: 15px; font-weight: 600; margin: 0 0 12px;
-  }
-  .setup-panel p {
-    font-size: 13px; color: var(--fg-muted); margin: 0 0 16px;
-  }
-  .form-group { margin-bottom: 14px; }
-  .form-group label {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--fg-muted);
-    margin-bottom: 4px;
-  }
-  .form-group input, .form-group textarea {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--bg-input);
-    color: var(--fg);
-    font-family: inherit;
-    font-size: 14px;
-  }
-  .form-group input:focus, .form-group textarea:focus {
-    outline: 2px solid var(--accent);
-    outline-offset: -1px;
-    border-color: transparent;
-  }
-  .form-group textarea { resize: vertical; min-height: 60px; }
+/* Nav */
+.nav {
+  position: sticky; top: calc(env(safe-area-inset-top, 0px) + 53px);
+  background: var(--bg); z-index: 35; padding: 8px 0;
+}
+.nav-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  max-width: 900px; margin: 0 auto; gap: 8px;
+}
+.tabs { display: flex; gap: 2px; background: var(--surface-alt); border-radius: var(--radius); padding: 3px; }
+.tabs button {
+  padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 500;
+  color: var(--text-2); transition: all .15s; white-space: nowrap;
+}
+.tabs button.on { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.btn-add {
+  padding: 7px 16px; border-radius: var(--radius); font-size: 13px; font-weight: 600;
+  background: var(--accent); color: #fff; transition: background .15s; white-space: nowrap;
+}
+.btn-add:hover { background: var(--accent-h); }
 
-  /* Buttons */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity .15s;
-  }
-  .btn:hover { opacity: .85; }
-  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-secondary { background: var(--bg-input); color: var(--fg); border: 1px solid var(--border); }
-  .btn-small { padding: 5px 10px; font-size: 12px; }
-  .btn-icon { padding: 6px; width: 32px; height: 32px; justify-content: center; }
+/* Main */
+main { max-width: 900px; margin: 0 auto; padding-block: 16px 40px; }
 
-  /* Tabs */
-  .tabs {
-    display: flex;
-    gap: 2px;
-    margin: 16px 0 0;
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
-  }
-  .tab {
-    padding: 10px 16px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--fg-muted);
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    cursor: pointer;
-    white-space: nowrap;
-    font-family: inherit;
-  }
-  .tab:hover { color: var(--fg); }
-  .tab.active {
-    color: var(--accent-text);
-    border-bottom-color: var(--accent);
-  }
-  .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+/* Stats row */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+.stat {
+  background: var(--surface); border-radius: var(--radius); padding: 12px 14px;
+  border: 1px solid var(--border);
+}
+.stat-label { font-size: 11px; font-weight: 500; color: var(--text-3); text-transform: uppercase; letter-spacing: .5px; }
+.stat-val { font-size: 24px; font-weight: 700; margin-top: 2px; font-variant-numeric: tabular-nums; }
 
-  /* Stats bar */
-  .stats-bar {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 10px;
-    margin: 16px 0;
-  }
-  .stat-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px;
-    box-shadow: var(--shadow);
-  }
-  .stat-card .stat-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--fg-muted);
-  }
-  .stat-card .stat-value {
-    font-size: 22px;
-    font-weight: 700;
-    margin-top: 2px;
-    letter-spacing: -0.02em;
-  }
+/* Post card */
+.post-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px;
+  position: relative;
+}
+.post-card .pillar-stripe {
+  position: absolute; left: 0; top: 12px; bottom: 12px; width: 3px;
+  border-radius: 0 3px 3px 0;
+}
+.post-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 12px; padding-left: 12px;
+}
+.post-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pillar-tag {
+  font-size: 11px; font-weight: 600; padding: 2px 8px;
+  border-radius: 4px; text-transform: uppercase; letter-spacing: .3px;
+}
+.post-time { font-size: 12px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+.post-title { font-size: 15px; font-weight: 600; margin-top: 6px; padding-left: 12px; }
+.post-actions {
+  display: flex; gap: 4px; flex-shrink: 0;
+}
+.post-actions button {
+  width: 30px; height: 30px; border-radius: 6px;
+  display: grid; place-items: center; font-size: 14px;
+  transition: background .15s;
+}
+.post-actions button:hover { background: var(--surface-alt); }
 
-  /* Content list */
-  .content-list { margin: 16px 0; display: flex; flex-direction: column; gap: 8px; }
-  .content-item {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    box-shadow: var(--shadow);
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 12px;
-    align-items: start;
-  }
-  @media (max-width: 500px) {
-    .content-item {
-      grid-template-columns: 1fr;
-    }
-    .content-item .item-actions {
-      justify-self: start;
-    }
-  }
-  .item-date {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    color: var(--fg-muted);
-    padding-top: 2px;
-    white-space: nowrap;
-  }
-  .item-body { min-width: 0; }
-  .item-title {
-    font-size: 14px;
-    font-weight: 600;
-    margin: 0 0 4px;
-    word-wrap: break-word;
-  }
-  .item-caption {
-    font-size: 13px;
-    color: var(--fg-muted);
-    margin: 0 0 6px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    word-wrap: break-word;
-  }
-  .item-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-  .tag {
-    font-size: 11px;
-    padding: 2px 7px;
-    border-radius: 4px;
-    font-weight: 500;
-  }
-  .tag-pillar {
-    background: var(--accent-soft);
-    color: var(--accent-text);
-  }
-  .tag-status {
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-  }
-  .tag-pending { background: var(--warning-soft); color: var(--warning); }
-  .tag-posted { background: var(--success-soft); color: var(--success); }
-  .tag-hashtag { background: var(--bg-input); color: var(--fg-muted); }
+/* Copy section */
+.copy-section {
+  margin-top: 12px; padding-left: 12px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.copy-block {
+  background: var(--copy-bg); border: 1px solid var(--copy-border);
+  border-radius: var(--radius); padding: 10px 12px; position: relative;
+}
+.copy-block-label {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .5px; color: var(--text-3); margin-bottom: 4px;
+}
+.copy-block-text {
+  font-size: 13px; line-height: 1.55; white-space: pre-wrap;
+  word-break: break-word; color: var(--text);
+}
+.copy-block-text.mono { font-family: var(--mono); font-size: 12px; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: 600;
+  background: var(--surface); border: 1px solid var(--border);
+  display: flex; align-items: center; gap: 4px;
+  transition: all .15s;
+}
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+.copy-btn.copied { background: var(--success); border-color: var(--success); color: #fff; }
+.copy-tiktok {
+  margin-top: 4px; padding: 10px 16px; border-radius: var(--radius);
+  background: var(--text); color: var(--bg); font-size: 13px; font-weight: 600;
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: opacity .15s;
+}
+.copy-tiktok:hover { opacity: .85; }
+.copy-tiktok.copied { background: var(--success); }
 
-  .item-actions {
-    display: flex; gap: 4px; align-items: center;
-  }
+/* Status badge */
+.status-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px;
+  cursor: pointer; transition: all .15s;
+}
+.status-badge.pending { background: #FFF3CD; color: #856404; }
+.status-badge.posted { background: var(--success-bg); color: var(--success); }
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .status-badge.pending { background: #332B00; color: var(--warn); }
+}
+:root[data-theme="dark"] .status-badge.pending { background: #332B00; color: var(--warn); }
 
-  /* Add form modal */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.5);
-    z-index: 20;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .modal-overlay[hidden] { display: none !important; }
-  .modal {
-    background: var(--bg-card);
-    border-radius: 12px;
-    width: 100%;
-    max-width: 480px;
-    max-height: 85vh;
-    overflow-y: auto;
-    padding: 24px;
-    box-shadow: 0 20px 60px rgba(0,0,0,.2);
-  }
-  .modal h2 { font-size: 16px; font-weight: 700; margin: 0 0 16px; }
-  .modal-actions {
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-    margin-top: 16px;
-  }
+/* Week view */
+.week-nav {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+}
+.week-nav span { font-size: 15px; font-weight: 600; min-width: 180px; }
+.week-nav button {
+  width: 32px; height: 32px; border-radius: 6px; display: grid; place-items: center;
+  background: var(--surface); border: 1px solid var(--border); font-size: 16px;
+}
+.week-nav button:hover { background: var(--surface-alt); }
+.week-nav .btn-today {
+  width: auto; padding: 0 12px; font-size: 12px; font-weight: 500;
+}
+.week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.week-day {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 8px; min-height: 100px;
+}
+.week-day.today { border-color: var(--accent); }
+.week-day-label { font-size: 11px; font-weight: 600; color: var(--text-3); margin-bottom: 6px; }
+.week-day-label.today { color: var(--accent); }
+.week-post {
+  font-size: 11px; padding: 4px 6px; border-radius: 4px;
+  margin-bottom: 4px; cursor: pointer; border-left: 3px solid; line-height: 1.3;
+}
+.week-post:hover { opacity: .8; }
 
-  /* Pillar select */
-  .pillar-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
-  .pillar-option {
-    padding: 8px 10px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--bg-input);
-    color: var(--fg);
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    text-align: left;
-    transition: border-color .15s;
-  }
-  .pillar-option:hover { border-color: var(--accent); }
-  .pillar-option.selected {
-    border-color: var(--accent);
-    background: var(--accent-soft);
-    color: var(--accent-text);
-  }
-  .pillar-option:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+/* All view */
+.filter-bar {
+  display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.filter-bar select {
+  padding: 6px 10px; border-radius: 6px; font-size: 12px;
+  background: var(--surface); border: 1px solid var(--border);
+}
+.all-table {
+  width: 100%; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); overflow: hidden;
+}
+.all-row {
+  display: grid; grid-template-columns: 3px 80px 60px 1fr 70px 80px;
+  align-items: center; gap: 8px; padding: 10px 12px;
+  border-bottom: 1px solid var(--border); font-size: 13px; cursor: pointer;
+  transition: background .1s;
+}
+.all-row:last-child { border-bottom: none; }
+.all-row:hover { background: var(--surface-alt); }
+.all-row .pillar-bar { width: 3px; height: 24px; border-radius: 2px; }
 
-  /* Empty state */
-  .empty-state {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--fg-muted);
-  }
-  .empty-state p { margin: 4px 0; }
-  .empty-state .empty-icon { font-size: 32px; margin-bottom: 8px; }
+/* Import tab */
+.import-area {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 20px;
+}
+.import-area h3 { font-size: 15px; font-weight: 600; margin: 0 0 4px; }
+.import-area p { font-size: 13px; color: var(--text-2); margin: 0 0 12px; }
+.import-area textarea {
+  width: 100%; min-height: 160px; padding: 12px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius); font-family: var(--mono); font-size: 12px;
+  resize: vertical; line-height: 1.5;
+}
+.import-area textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.import-actions {
+  display: flex; gap: 8px; margin-top: 12px; align-items: center;
+}
+.btn-primary {
+  padding: 8px 20px; border-radius: var(--radius); font-size: 13px; font-weight: 600;
+  background: var(--accent); color: #fff; transition: background .15s;
+}
+.btn-primary:hover { background: var(--accent-h); }
+.btn-secondary {
+  padding: 8px 16px; border-radius: var(--radius); font-size: 13px; font-weight: 500;
+  background: var(--surface-alt); border: 1px solid var(--border); transition: background .15s;
+}
+.btn-secondary:hover { background: var(--border); }
+.import-preview { margin-top: 16px; }
+.import-preview h4 { font-size: 14px; font-weight: 600; margin: 0 0 8px; }
+.import-msg { padding: 10px 14px; border-radius: var(--radius); font-size: 13px; margin-top: 8px; }
+.import-msg.ok { background: var(--success-bg); color: var(--success); }
+.import-msg.err { background: #FFF0F0; color: var(--accent); }
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .import-msg.err { background: #2A1515; }
+}
+:root[data-theme="dark"] .import-msg.err { background: #2A1515; }
+.template-block {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px; margin-top: 12px;
+  font-family: var(--mono); font-size: 11px; line-height: 1.5;
+  white-space: pre-wrap; word-break: break-word; color: var(--text-2);
+}
 
-  /* Google Sheet link */
-  .sheet-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin: 12px 0;
-    font-size: 13px;
-  }
-  .sheet-link a {
-    color: var(--accent-text);
-    text-decoration: none;
-    font-weight: 500;
-    word-break: break-all;
-  }
-  .sheet-link a:hover { text-decoration: underline; }
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 100;
+  display: grid; place-items: center; padding: 16px;
+}
+.modal-box {
+  background: var(--surface); border-radius: var(--radius-lg);
+  width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto;
+  padding: 24px; box-shadow: 0 20px 60px rgba(0,0,0,.2);
+}
+.modal-box h2 { font-size: 17px; font-weight: 700; margin: 0 0 16px; }
+.form-group { margin-bottom: 12px; }
+.form-group label {
+  display: block; font-size: 12px; font-weight: 600; color: var(--text-2);
+  margin-bottom: 4px;
+}
+.form-group input, .form-group textarea, .form-group select {
+  width: 100%; padding: 8px 12px; border-radius: 6px;
+  background: var(--bg); border: 1px solid var(--border); font-size: 13px;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+  outline: 2px solid var(--accent); outline-offset: -1px;
+}
+.form-group textarea { min-height: 80px; resize: vertical; font-family: var(--font); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
 
-  /* Copy toast */
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: var(--fg);
-    color: var(--bg);
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    z-index: 30;
-    transition: transform .3s ease;
-    pointer-events: none;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
+/* Settings modal */
+.settings-url {
+  display: flex; gap: 8px; align-items: stretch;
+}
+.settings-url input { flex: 1; font-family: var(--mono); font-size: 12px; }
+.conn-status-msg { margin-top: 8px; font-size: 12px; padding: 8px 12px; border-radius: 6px; }
+.conn-status-msg.ok { background: var(--success-bg); color: var(--success); }
+.conn-status-msg.err { background: #FFF0F0; color: var(--accent); }
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .conn-status-msg.err { background: #2A1515; }
+}
+:root[data-theme="dark"] .conn-status-msg.err { background: #2A1515; }
 
-  /* Week nav */
-  .week-nav {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 16px 0 8px;
-  }
-  .week-label {
-    font-size: 14px;
-    font-weight: 600;
-    flex: 1;
-  }
+/* Empty state */
+.empty {
+  text-align: center; padding: 48px 20px; color: var(--text-3);
+}
+.empty-icon { font-size: 40px; margin-bottom: 8px; opacity: .5; }
+.empty h3 { font-size: 15px; font-weight: 600; margin: 0 0 4px; color: var(--text-2); }
+.empty p { font-size: 13px; margin: 0; }
 
-  .sr-only {
-    position: absolute;
-    width: 1px; height: 1px;
-    padding: 0; margin: -1px;
-    overflow: hidden;
-    clip: rect(0,0,0,0);
-    border: 0;
-  }
+/* Responsive */
+@media(max-width: 640px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .week-grid { grid-template-columns: 1fr; }
+  .all-row { grid-template-columns: 3px 60px 50px 1fr 60px; }
+  .all-row > :nth-child(6) { display: none; }
+  .tabs button { padding: 7px 10px; font-size: 12px; }
+  .form-row { grid-template-columns: 1fr; }
+}
+@media(max-width: 380px) {
+  .tabs button { padding: 6px 8px; font-size: 11px; }
+}
 </style>
 
-<!-- Header -->
-<div class="header">
-  <h1>
-    <span class="logo">M</span>
-    TikTok @mit.anh8
-  </h1>
-  <div style="display:flex;gap:6px">
-    <button class="btn btn-primary btn-small" onclick="openAddModal()">+ Thêm bài</button>
+<header class="hdr">
+  <div class="hdr-inner">
+    <h1><span class="logo">M</span> TikTok @mit.anh8</h1>
+    <button class="conn-btn" onclick="openSettings()">
+      <span class="conn-dot" id="connDot"></span>
+      <span id="connLabel">Chưa kết nối</span>
+    </button>
   </div>
-</div>
+</header>
 
-<!-- Setup: Google Sheet URL -->
-<div id="setupPanel" class="setup-panel">
-  <h2>Kết nối Google Sheet</h2>
-  <p>Tạo Google Sheet, deploy Apps Script Web App, dán URL vào đây. Dữ liệu sẽ đồng bộ 2 chiều.</p>
-  <div class="form-group">
-    <label for="sheetUrl">Apps Script Web App URL</label>
-    <input type="url" id="sheetUrl" placeholder="https://script.google.com/macros/s/…/exec">
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="tabs" id="tabs">
+      <button class="on" data-tab="today" onclick="switchTab('today')">Hôm nay</button>
+      <button data-tab="week" onclick="switchTab('week')">Lịch tuần</button>
+      <button data-tab="all" onclick="switchTab('all')">Tất cả</button>
+      <button data-tab="import" onclick="switchTab('import')">Nhập AI</button>
+    </div>
+    <button class="btn-add" onclick="openPostModal()">+ Thêm bài</button>
   </div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button class="btn btn-primary" onclick="saveSheetUrl()">Lưu & kết nối</button>
-    <button class="btn btn-secondary" onclick="useLocalOnly()">Dùng offline trước</button>
-  </div>
-</div>
+</nav>
 
-<!-- Connected sheet link -->
-<div id="sheetInfo" class="sheet-link" hidden>
-  <span style="font-size:16px">📊</span>
-  <span>Sheet: <a id="sheetLinkA" href="#" target="_blank" rel="noopener">Đã kết nối</a></span>
-  <button class="btn btn-small btn-secondary" onclick="syncFromSheet()" style="margin-left:auto">Đồng bộ</button>
-  <button class="btn btn-small btn-secondary" onclick="disconnectSheet()">Ngắt</button>
-</div>
+<main>
+  <div id="view-today"></div>
+  <div id="view-week" hidden></div>
+  <div id="view-all" hidden></div>
+  <div id="view-import" hidden></div>
+</main>
 
-<!-- Tabs -->
-<div class="tabs">
-  <button class="tab active" data-tab="calendar" onclick="switchTab('calendar')">Lịch đăng</button>
-  <button class="tab" data-tab="all" onclick="switchTab('all')">Tất cả</button>
-  <button class="tab" data-tab="pending" onclick="switchTab('pending')">Chưa đăng</button>
-  <button class="tab" data-tab="posted" onclick="switchTab('posted')">Đã đăng</button>
-</div>
-
-<!-- Stats -->
-<div class="stats-bar">
-  <div class="stat-card">
-    <div class="stat-label">Tổng bài</div>
-    <div class="stat-value" id="statTotal">0</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-label">Chưa đăng</div>
-    <div class="stat-value" id="statPending">0</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-label">Đã đăng</div>
-    <div class="stat-value" id="statPosted">0</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-label">Tuần này</div>
-    <div class="stat-value" id="statWeek">0</div>
-  </div>
-</div>
-
-<!-- Week navigation (for calendar tab) -->
-<div id="weekNav" class="week-nav">
-  <button class="btn btn-icon btn-secondary" onclick="changeWeek(-1)" aria-label="Tuần trước">&larr;</button>
-  <span class="week-label" id="weekLabel"></span>
-  <button class="btn btn-icon btn-secondary" onclick="changeWeek(1)" aria-label="Tuần sau">&rarr;</button>
-  <button class="btn btn-small btn-secondary" onclick="changeWeek(0)">Hôm nay</button>
-</div>
-
-<!-- Content list -->
-<div class="content-list" id="contentList"></div>
-
-<!-- Add/Edit Modal -->
-<div class="modal-overlay" id="modalOverlay" hidden>
-  <div class="modal">
-    <h2 id="modalTitle">Thêm bài mới</h2>
-    <input type="hidden" id="editId">
-
-    <div class="form-group">
-      <label>Trụ nội dung</label>
-      <div class="pillar-grid" id="pillarGrid">
-        <button class="pillar-option" data-pillar="Tổng hợp CT" onclick="selectPillar(this)">📊 Tổng hợp CT</button>
-        <button class="pillar-option" data-pillar="Giải đề bundle" onclick="selectPillar(this)">📝 Giải đề bundle</button>
-        <button class="pillar-option" data-pillar="Mẹo Casio" onclick="selectPillar(this)">⚡ Mẹo Casio</button>
-        <button class="pillar-option" data-pillar="Myth vs Fact" onclick="selectPillar(this)">❓ Myth vs Fact</button>
+<!-- Post Modal -->
+<div id="postModal" class="modal-overlay" hidden onclick="if(event.target===this)closePostModal()">
+  <div class="modal-box">
+    <h2 id="postModalTitle">Thêm bài mới</h2>
+    <input type="hidden" id="f-id">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Trụ nội dung</label>
+        <select id="f-pillar">
+          <option value="Tổng hợp CT">Tổng hợp CT</option>
+          <option value="Giải đề bundle">Giải đề bundle</option>
+          <option value="Mẹo Casio">Mẹo Casio</option>
+          <option value="Myth vs Fact">Myth vs Fact</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Trạng thái</label>
+        <select id="f-status">
+          <option value="pending">Chưa đăng</option>
+          <option value="posted">Đã đăng</option>
+        </select>
       </div>
     </div>
-
-    <div class="form-group">
-      <label for="postDate">Ngày đăng</label>
-      <input type="date" id="postDate">
+    <div class="form-row">
+      <div class="form-group"><label>Ngày</label><input type="date" id="f-date"></div>
+      <div class="form-group"><label>Giờ</label><input type="time" id="f-time" value="19:30"></div>
     </div>
-
-    <div class="form-group">
-      <label for="postTime">Giờ đăng</label>
-      <input type="time" id="postTime" value="19:30">
-    </div>
-
-    <div class="form-group">
-      <label for="postTitle">Tiêu đề</label>
-      <input type="text" id="postTitle" placeholder="VD: Tổng hợp công thức Đạo hàm">
-    </div>
-
-    <div class="form-group">
-      <label for="postCaption">Caption</label>
-      <textarea id="postCaption" rows="3" placeholder="Caption cho TikTok..."></textarea>
-    </div>
-
-    <div class="form-group">
-      <label for="postHashtags">Hashtags</label>
-      <input type="text" id="postHashtags" placeholder="#EduTok #ToánTHPT #MitAnhToan" value="#EduTok #LearnOnTikTok #ToánTHPT #ÔnThi2026 #MitAnhToan">
-    </div>
-
-    <div class="form-group">
-      <label for="postSlideUrl">Link slides (Google Drive)</label>
-      <input type="url" id="postSlideUrl" placeholder="https://drive.google.com/...">
-    </div>
-
-    <div class="form-group">
-      <label for="postHook">Hook (1-3 giây đầu)</label>
-      <input type="text" id="postHook" placeholder="VD: 5 công thức này giúp bạn làm đúng 90% bài Hàm số">
-    </div>
-
-    <div class="form-group">
-      <label for="postCta">CTA</label>
-      <input type="text" id="postCta" placeholder="VD: Save lại để ôn thi!" value="Save lại để ôn thi!">
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal()">Hủy</button>
-      <button class="btn btn-primary" onclick="savePost()">Lưu</button>
+    <div class="form-group"><label>Tiêu đề</label><input id="f-title" placeholder="VD: Tổng hợp công thức Đạo hàm"></div>
+    <div class="form-group"><label>Hook mở đầu</label><input id="f-hook" placeholder="VD: Bạn có biết 80% thí sinh mất điểm vì..."></div>
+    <div class="form-group"><label>Caption</label><textarea id="f-caption" placeholder="Nội dung caption cho TikTok..."></textarea></div>
+    <div class="form-group"><label>CTA kết thúc</label><input id="f-cta" placeholder="VD: Save lại để ôn thi!" value="Save lại để ôn thi!"></div>
+    <div class="form-group"><label>Hashtags</label><input id="f-hashtags" class="mono" placeholder="#EduTok #ToánTHPT ..." value="#EduTok #LearnOnTikTok #ToánTHPT #ÔnThi2026 #MitAnhToan"></div>
+    <div class="form-group"><label>Slide URL</label><input id="f-slideUrl" placeholder="Link Google Drive hoặc URL slide"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closePostModal()">Hủy</button>
+      <button class="btn-primary" onclick="savePost()">Lưu</button>
     </div>
   </div>
 </div>
 
-<!-- Toast -->
-<div class="toast" id="toast"></div>
+<!-- Settings Modal -->
+<div id="settingsModal" class="modal-overlay" hidden onclick="if(event.target===this)closeSettings()">
+  <div class="modal-box">
+    <h2>Kết nối Google Sheet</h2>
+    <p style="font-size:13px;color:var(--text-2);margin:0 0 12px">Dán URL Apps Script Web App đã deploy để đồng bộ dữ liệu.</p>
+    <div class="settings-url">
+      <input id="s-url" placeholder="https://script.google.com/macros/s/.../exec" spellcheck="false">
+      <button class="btn-primary" onclick="testConnection()">Kết nối</button>
+    </div>
+    <div id="connMsg"></div>
+    <details style="margin-top:16px;font-size:12px;color:var(--text-2)">
+      <summary style="cursor:pointer;font-weight:600">Hướng dẫn lấy URL</summary>
+      <ol style="margin:8px 0 0;padding-left:20px;line-height:1.7">
+        <li>Mở <a href="https://docs.google.com/spreadsheets/d/1-0ouraOWws5Vew4dXlvaYlb9QS4YtrLfKaZew5tDgS0/edit" target="_blank" rel="noopener" style="color:var(--accent)">Google Sheet</a></li>
+        <li>Đổi tên sheet tab đầu tiên thành <b>Posts</b></li>
+        <li>Extensions → Apps Script → dán code từ <code>apps-script.js</code></li>
+        <li>Chạy hàm <code>getSheet</code> 1 lần → cấp quyền</li>
+        <li>Deploy → New deployment → Web app → Anyone → Deploy</li>
+        <li>Copy URL → dán vào ô trên</li>
+      </ol>
+    </details>
+    <div class="modal-footer" style="margin-top:16px">
+      <button class="btn-secondary" onclick="disconnectSheet()">Ngắt kết nối</button>
+      <button class="btn-secondary" onclick="closeSettings()">Đóng</button>
+    </div>
+  </div>
+</div>
 
 <script>
-const PILLARS = ['Tổng hợp CT', 'Giải đề bundle', 'Mẹo Casio', 'Myth vs Fact'];
-const PILLAR_ICONS = {'Tổng hợp CT':'📊','Giải đề bundle':'📝','Mẹo Casio':'⚡','Myth vs Fact':'❓'};
+const PILLARS = {
+  'Tổng hợp CT': { color: 'var(--p-ct)', bg: '#EFF6FF', bgD: '#172135' },
+  'Giải đề bundle': { color: 'var(--p-gd)', bg: '#FFF7ED', bgD: '#261A0A' },
+  'Mẹo Casio': { color: 'var(--p-casio)', bg: '#ECFDF5', bgD: '#0A261A' },
+  'Myth vs Fact': { color: 'var(--p-myth)', bg: '#F5F3FF', bgD: '#1A1035' }
+};
+const DAYS_VI = ['CN','T2','T3','T4','T5','T6','T7'];
 
-let posts = [];
-let currentTab = 'calendar';
-let weekOffset = 0;
-let sheetApiUrl = '';
+let state = {
+  posts: [],
+  tab: 'today',
+  weekStart: getMonday(new Date()),
+  scriptUrl: '',
+  connected: false,
+  lastSync: null
+};
 
-// ---- Storage ----
-function loadData() {
-  try {
-    const saved = localStorage.getItem('tiktok_posts');
-    if (saved) posts = JSON.parse(saved);
-    sheetApiUrl = localStorage.getItem('tiktok_sheet_url') || '';
-  } catch(e) {}
-}
-
-function saveData() {
-  try {
-    localStorage.setItem('tiktok_posts', JSON.stringify(posts));
-    if (sheetApiUrl) localStorage.setItem('tiktok_sheet_url', sheetApiUrl);
-  } catch(e) {}
-}
-
-// ---- Sheet connection ----
-function saveSheetUrl() {
-  const url = document.getElementById('sheetUrl').value.trim();
-  if (!url) return;
-  sheetApiUrl = url;
-  try { localStorage.setItem('tiktok_sheet_url', url); } catch(e) {}
-  updateSetupUI();
-  syncFromSheet();
-}
-
-function useLocalOnly() {
-  document.getElementById('setupPanel').hidden = true;
-}
-
-function disconnectSheet() {
-  sheetApiUrl = '';
-  try { localStorage.removeItem('tiktok_sheet_url'); } catch(e) {}
-  updateSetupUI();
-}
-
-function updateSetupUI() {
-  const hasSheet = !!sheetApiUrl;
-  document.getElementById('setupPanel').hidden = hasSheet;
-  document.getElementById('sheetInfo').hidden = !hasSheet;
-  if (hasSheet) {
-    document.getElementById('sheetLinkA').href = sheetApiUrl;
-    document.getElementById('sheetLinkA').textContent = sheetApiUrl.substring(0, 50) + '…';
+function init() {
+  try { state.posts = JSON.parse(localStorage.getItem('tk_posts') || '[]'); } catch(e) {}
+  try { state.scriptUrl = localStorage.getItem('tk_url') || ''; } catch(e) {}
+  if (state.scriptUrl) {
+    document.getElementById('s-url').value = state.scriptUrl;
+    testConnection(true);
   }
+  render();
 }
 
-async function syncToSheet(post) {
-  if (!sheetApiUrl) return;
-  try {
-    await fetch(sheetApiUrl, {
-      method: 'POST',
-      headers: {'Content-Type': 'text/plain'},
-      body: JSON.stringify({action: 'upsert', data: post})
-    });
-  } catch(e) { console.warn('Sync to sheet failed:', e); }
+function save() {
+  try { localStorage.setItem('tk_posts', JSON.stringify(state.posts)); } catch(e) {}
 }
 
-async function syncFromSheet() {
-  if (!sheetApiUrl) return;
-  try {
-    const r = await fetch(sheetApiUrl + '?action=getAll');
-    const data = await r.json();
-    if (Array.isArray(data)) {
-      posts = data;
-      saveData();
-      render();
-      showToast('Đã đồng bộ ' + data.length + ' bài');
-    }
-  } catch(e) {
-    showToast('Lỗi đồng bộ — kiểm tra URL');
-  }
-}
-
-// ---- Posts CRUD ----
-function generateId() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-}
-
-function openAddModal(prefillDate) {
-  document.getElementById('modalTitle').textContent = 'Thêm bài mới';
-  document.getElementById('editId').value = '';
-  document.getElementById('postDate').value = prefillDate || new Date().toISOString().split('T')[0];
-  document.getElementById('postTime').value = '19:30';
-  document.getElementById('postTitle').value = '';
-  document.getElementById('postCaption').value = '';
-  document.getElementById('postHashtags').value = '#EduTok #LearnOnTikTok #ToánTHPT #ÔnThi2026 #MitAnhToan';
-  document.getElementById('postSlideUrl').value = '';
-  document.getElementById('postHook').value = '';
-  document.getElementById('postCta').value = 'Save lại để ôn thi!';
-  document.querySelectorAll('.pillar-option').forEach(b => b.classList.remove('selected'));
-  document.getElementById('modalOverlay').hidden = false;
-}
-
-function openEditModal(id) {
-  const post = posts.find(p => p.id === id);
-  if (!post) return;
-  document.getElementById('modalTitle').textContent = 'Sửa bài';
-  document.getElementById('editId').value = id;
-  document.getElementById('postDate').value = post.date;
-  document.getElementById('postTime').value = post.time || '19:30';
-  document.getElementById('postTitle').value = post.title;
-  document.getElementById('postCaption').value = post.caption || '';
-  document.getElementById('postHashtags').value = post.hashtags || '';
-  document.getElementById('postSlideUrl').value = post.slideUrl || '';
-  document.getElementById('postHook').value = post.hook || '';
-  document.getElementById('postCta').value = post.cta || '';
-  document.querySelectorAll('.pillar-option').forEach(b => {
-    b.classList.toggle('selected', b.dataset.pillar === post.pillar);
+// == Tabs ==
+function switchTab(tab) {
+  state.tab = tab;
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
+  ['today','week','all','import'].forEach(t => {
+    document.getElementById('view-' + t).hidden = t !== tab;
   });
-  document.getElementById('modalOverlay').hidden = false;
+  render();
 }
 
-function closeModal() {
-  document.getElementById('modalOverlay').hidden = true;
+// == Render ==
+function render() {
+  const fn = { today: renderToday, week: renderWeek, all: renderAll, import: renderImport };
+  fn[state.tab]();
 }
 
-function selectPillar(btn) {
-  document.querySelectorAll('.pillar-option').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
+function renderToday() {
+  const el = document.getElementById('view-today');
+  const today = fmtDate(new Date());
+  const posts = state.posts.filter(p => p.date === today);
+  const pending = state.posts.filter(p => p.status !== 'posted').length;
+  const posted = state.posts.filter(p => p.status === 'posted').length;
+  const weekPosts = getWeekPosts().length;
+
+  let html = `<div class="stats">
+    <div class="stat"><div class="stat-label">Tổng bài</div><div class="stat-val">${state.posts.length}</div></div>
+    <div class="stat"><div class="stat-label">Chưa đăng</div><div class="stat-val">${pending}</div></div>
+    <div class="stat"><div class="stat-label">Đã đăng</div><div class="stat-val">${posted}</div></div>
+    <div class="stat"><div class="stat-label">Tuần này</div><div class="stat-val">${weekPosts}</div></div>
+  </div>`;
+
+  if (!posts.length) {
+    html += `<div class="empty"><div class="empty-icon">📭</div><h3>Hôm nay chưa có bài</h3>
+      <p>Nhấn "+ Thêm bài" hoặc "Nhập AI" để tạo content</p></div>`;
+  } else {
+    posts.forEach(p => { html += postCard(p); });
+  }
+  el.innerHTML = html;
 }
+
+function postCard(p) {
+  const pi = PILLARS[p.pillar] || { color: 'var(--text-3)', bg: 'var(--surface-alt)', bgD: 'var(--surface-alt)' };
+  const isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+  const pBg = isDark ? pi.bgD : pi.bg;
+  const statusCls = p.status === 'posted' ? 'posted' : 'pending';
+  const statusTxt = p.status === 'posted' ? '✓ Đã đăng' : '◷ Chưa đăng';
+
+  let copyFields = '';
+  if (p.hook) copyFields += copyBlock('Hook', p.hook);
+  if (p.caption) copyFields += copyBlock('Caption', p.caption);
+  if (p.cta) copyFields += copyBlock('CTA', p.cta);
+  if (p.hashtags) copyFields += copyBlock('Hashtags', p.hashtags, true);
+
+  const fullText = [p.hook, p.caption, p.cta, '', p.hashtags].filter(Boolean).join('\n\n');
+
+  return `<div class="post-card">
+    <div class="pillar-stripe" style="background:${pi.color}"></div>
+    <div class="post-head">
+      <div>
+        <div class="post-meta">
+          <span class="pillar-tag" style="background:${pBg};color:${pi.color}">${esc(p.pillar)}</span>
+          <span class="post-time">${p.time || ''}</span>
+          <span class="status-badge ${statusCls}" onclick="toggleStatus('${p.id}')">${statusTxt}</span>
+        </div>
+        <div class="post-title">${esc(p.title)}</div>
+      </div>
+      <div class="post-actions">
+        <button onclick="editPost('${p.id}')" title="Sửa">✎</button>
+        <button onclick="removePost('${p.id}')" title="Xóa">✕</button>
+      </div>
+    </div>
+    ${copyFields ? `<div class="copy-section">
+      ${copyFields}
+      ${fullText.trim() ? `<button class="copy-tiktok" onclick="copyText(this, ${attr(fullText)})">📋 Copy toàn bộ cho TikTok</button>` : ''}
+    </div>` : ''}
+    ${p.slideUrl ? `<div style="padding-left:12px;margin-top:8px"><a href="${esc(p.slideUrl)}" target="_blank" rel="noopener" style="font-size:12px;color:var(--accent)">🔗 Mở slide</a></div>` : ''}
+  </div>`;
+}
+
+function copyBlock(label, text, mono = false) {
+  return `<div class="copy-block">
+    <div class="copy-block-label">${label}</div>
+    <div class="copy-block-text${mono ? ' mono' : ''}">${esc(text)}</div>
+    <button class="copy-btn" onclick="copyText(this, ${attr(text)})">📋 Copy</button>
+  </div>`;
+}
+
+function renderWeek() {
+  const el = document.getElementById('view-week');
+  const ws = state.weekStart;
+  const we = new Date(ws); we.setDate(we.getDate() + 6);
+  const today = fmtDate(new Date());
+
+  let html = `<div class="week-nav">
+    <button onclick="moveWeek(-1)">←</button>
+    <span>${fmtDateVi(ws)} – ${fmtDateVi(we)}</span>
+    <button onclick="moveWeek(1)">→</button>
+    <button class="btn-today" onclick="goThisWeek()">Hôm nay</button>
+  </div><div class="week-grid">`;
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(ws); d.setDate(d.getDate() + i);
+    const ds = fmtDate(d);
+    const isToday = ds === today;
+    const dayPosts = state.posts.filter(p => p.date === ds);
+    html += `<div class="week-day${isToday ? ' today' : ''}">
+      <div class="week-day-label${isToday ? ' today' : ''}">${DAYS_VI[d.getDay()]} ${d.getDate()}/${d.getMonth()+1}</div>`;
+    dayPosts.forEach(p => {
+      const pi = PILLARS[p.pillar] || { color: 'var(--text-3)' };
+      html += `<div class="week-post" style="border-color:${pi.color};background:${pi.color}11" onclick="editPost('${p.id}')">
+        <div style="font-weight:500">${esc(p.title || 'Untitled')}</div>
+        <div style="color:var(--text-3)">${p.time || ''}</div>
+      </div>`;
+    });
+    html += '</div>';
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function renderAll() {
+  const el = document.getElementById('view-all');
+  let html = `<div class="filter-bar">
+    <select onchange="state._fPillar=this.value;renderAll()">
+      <option value="">Tất cả trụ</option>
+      ${Object.keys(PILLARS).map(p => `<option>${p}</option>`).join('')}
+    </select>
+    <select onchange="state._fStatus=this.value;renderAll()">
+      <option value="">Tất cả trạng thái</option>
+      <option value="pending">Chưa đăng</option>
+      <option value="posted">Đã đăng</option>
+    </select>
+  </div>`;
+
+  let posts = [...state.posts].sort((a,b) => (a.date||'').localeCompare(b.date||''));
+  if (state._fPillar) posts = posts.filter(p => p.pillar === state._fPillar);
+  if (state._fStatus) posts = posts.filter(p => p.status === state._fStatus);
+
+  if (!posts.length) {
+    html += '<div class="empty"><div class="empty-icon">📋</div><h3>Chưa có bài nào</h3></div>';
+  } else {
+    html += '<div class="all-table">';
+    posts.forEach(p => {
+      const pi = PILLARS[p.pillar] || { color: 'var(--text-3)' };
+      const st = p.status === 'posted' ? 'posted' : 'pending';
+      const stTxt = p.status === 'posted' ? '✓ Đã đăng' : '◷ Chưa đăng';
+      html += `<div class="all-row" onclick="editPost('${p.id}')">
+        <div class="pillar-bar" style="background:${pi.color}"></div>
+        <div style="font-size:12px;color:var(--text-3);font-variant-numeric:tabular-nums">${p.date || '—'}</div>
+        <div style="font-size:12px;color:var(--text-3)">${p.time || ''}</div>
+        <div style="font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.title || 'Untitled')}</div>
+        <span class="status-badge ${st}" onclick="event.stopPropagation();toggleStatus('${p.id}')">${stTxt}</span>
+        <div style="font-size:11px;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.pillar)}</div>
+      </div>`;
+    });
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function renderImport() {
+  const el = document.getElementById('view-import');
+  el.innerHTML = `<div class="import-area">
+    <h3>Nhập nội dung từ AI Agent</h3>
+    <p>Dán JSON array từ AI agent vào đây. Mỗi object là 1 bài đăng.</p>
+    <textarea id="importText" placeholder='[{"pillar":"Tổng hợp CT","date":"2026-11-09","time":"19:30","title":"...","caption":"...","hashtags":"...","hook":"...","cta":"..."}]' spellcheck="false"></textarea>
+    <div class="import-actions">
+      <button class="btn-primary" onclick="importAI()">Nhập</button>
+      <button class="btn-secondary" onclick="showTemplate()">Xem template JSON</button>
+      <button class="btn-secondary" onclick="document.getElementById('importText').value=''">Xóa</button>
+    </div>
+    <div id="importMsg"></div>
+    <div id="templateArea"></div>
+  </div>`;
+}
+
+// == Actions ==
+function openPostModal(data) {
+  const m = document.getElementById('postModal');
+  document.getElementById('postModalTitle').textContent = data ? 'Sửa bài' : 'Thêm bài mới';
+  document.getElementById('f-id').value = data?.id || '';
+  document.getElementById('f-pillar').value = data?.pillar || 'Tổng hợp CT';
+  document.getElementById('f-status').value = data?.status || 'pending';
+  document.getElementById('f-date').value = data?.date || fmtDate(new Date());
+  document.getElementById('f-time').value = data?.time || '19:30';
+  document.getElementById('f-title').value = data?.title || '';
+  document.getElementById('f-hook').value = data?.hook || '';
+  document.getElementById('f-caption').value = data?.caption || '';
+  document.getElementById('f-cta').value = data?.cta || 'Save lại để ôn thi!';
+  document.getElementById('f-hashtags').value = data?.hashtags || '#EduTok #LearnOnTikTok #ToánTHPT #ÔnThi2026 #MitAnhToan';
+  document.getElementById('f-slideUrl').value = data?.slideUrl || '';
+  m.hidden = false;
+}
+function closePostModal() { document.getElementById('postModal').hidden = true; }
 
 function savePost() {
-  const id = document.getElementById('editId').value;
-  const pillarBtn = document.querySelector('.pillar-option.selected');
+  const id = document.getElementById('f-id').value || 'p_' + Date.now();
   const post = {
-    id: id || generateId(),
-    pillar: pillarBtn ? pillarBtn.dataset.pillar : 'Tổng hợp CT',
-    date: document.getElementById('postDate').value,
-    time: document.getElementById('postTime').value || '19:30',
-    title: document.getElementById('postTitle').value.trim(),
-    caption: document.getElementById('postCaption').value.trim(),
-    hashtags: document.getElementById('postHashtags').value.trim(),
-    slideUrl: document.getElementById('postSlideUrl').value.trim(),
-    hook: document.getElementById('postHook').value.trim(),
-    cta: document.getElementById('postCta').value.trim(),
-    status: 'pending'
+    id,
+    pillar: document.getElementById('f-pillar').value,
+    date: document.getElementById('f-date').value,
+    time: document.getElementById('f-time').value,
+    title: document.getElementById('f-title').value,
+    caption: document.getElementById('f-caption').value,
+    hashtags: document.getElementById('f-hashtags').value,
+    slideUrl: document.getElementById('f-slideUrl').value,
+    hook: document.getElementById('f-hook').value,
+    cta: document.getElementById('f-cta').value,
+    status: document.getElementById('f-status').value
   };
-
-  if (!post.title || !post.date) {
-    showToast('Cần có tiêu đề và ngày đăng');
-    return;
-  }
-
-  if (id) {
-    const idx = posts.findIndex(p => p.id === id);
-    if (idx >= 0) { post.status = posts[idx].status; posts[idx] = post; }
-  } else {
-    posts.push(post);
-  }
-
-  saveData();
-  syncToSheet(post);
-  closeModal();
+  const idx = state.posts.findIndex(p => p.id === id);
+  if (idx >= 0) state.posts[idx] = post; else state.posts.push(post);
+  save();
+  apiUpsert(post);
+  closePostModal();
   render();
-  showToast(id ? 'Đã cập nhật' : 'Đã thêm bài mới');
+}
+
+function editPost(id) {
+  const p = state.posts.find(x => x.id === id);
+  if (p) openPostModal(p);
+}
+
+function removePost(id) {
+  state.posts = state.posts.filter(p => p.id !== id);
+  save();
+  apiDelete(id);
+  render();
 }
 
 function toggleStatus(id) {
-  const post = posts.find(p => p.id === id);
-  if (!post) return;
-  post.status = post.status === 'posted' ? 'pending' : 'posted';
-  saveData();
-  syncToSheet(post);
+  const p = state.posts.find(x => x.id === id);
+  if (!p) return;
+  p.status = p.status === 'posted' ? 'pending' : 'posted';
+  save();
+  apiUpsert(p);
   render();
 }
 
-function deletePost(id) {
-  posts = posts.filter(p => p.id !== id);
-  saveData();
-  render();
-}
-
-function copyCaption(id) {
-  const post = posts.find(p => p.id === id);
-  if (!post) return;
-  const fullCaption = [post.hook, '', post.caption, '', post.cta, '', post.hashtags].filter(Boolean).join('\n');
+async function copyText(btn, text) {
   try {
-    navigator.clipboard.writeText(fullCaption).then(() => showToast('Đã copy caption'));
+    await navigator.clipboard.writeText(text);
+    btn.classList.add('copied');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ Copied';
+    setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = orig; }, 1500);
   } catch(e) {
-    // fallback: select text
     const ta = document.createElement('textarea');
-    ta.value = fullCaption;
-    document.body.appendChild(ta);
-    ta.select();
+    ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy');
     document.body.removeChild(ta);
-    showToast('Chọn text để copy');
+    btn.classList.add('copied');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ Copied';
+    setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = orig; }, 1500);
   }
 }
 
-// ---- Rendering ----
-function getWeekRange(offset) {
-  const now = new Date();
-  const day = now.getDay() || 7;
-  const monday = new Date(now);
-  monday.setDate(now.getDate() - day + 1 + offset * 7);
-  monday.setHours(0,0,0,0);
-  const sunday = new Date(monday);
-  sunday.setDate(monday.getDate() + 6);
-  return {start: monday, end: sunday};
-}
-
-function formatDate(dateStr) {
-  const d = new Date(dateStr + 'T00:00:00');
-  const days = ['CN','T2','T3','T4','T5','T6','T7'];
-  return days[d.getDay()] + ' ' + d.getDate() + '/' + (d.getMonth()+1);
-}
-
-function formatWeekLabel(range) {
-  const s = range.start, e = range.end;
-  return (s.getDate()+'/'+(s.getMonth()+1)) + ' — ' + (e.getDate()+'/'+(e.getMonth()+1)+'/'+ e.getFullYear());
-}
-
-function getFilteredPosts() {
-  let filtered = [...posts];
-  if (currentTab === 'calendar') {
-    const range = getWeekRange(weekOffset);
-    filtered = filtered.filter(p => {
-      const d = new Date(p.date + 'T00:00:00');
-      return d >= range.start && d <= range.end;
+function importAI() {
+  const ta = document.getElementById('importText');
+  const msg = document.getElementById('importMsg');
+  try {
+    let data = JSON.parse(ta.value.trim());
+    if (!Array.isArray(data)) data = [data];
+    let count = 0;
+    data.forEach(item => {
+      const post = {
+        id: item.id || 'ai_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
+        pillar: item.pillar || 'Tổng hợp CT',
+        date: item.date || fmtDate(new Date()),
+        time: item.time || '19:30',
+        title: item.title || '',
+        caption: item.caption || '',
+        hashtags: item.hashtags || '#EduTok #ToánTHPT',
+        slideUrl: item.slideUrl || item.slide_url || '',
+        hook: item.hook || '',
+        cta: item.cta || '',
+        status: item.status || 'pending'
+      };
+      state.posts.push(post);
+      apiUpsert(post);
+      count++;
     });
-  } else if (currentTab === 'pending') {
-    filtered = filtered.filter(p => p.status !== 'posted');
-  } else if (currentTab === 'posted') {
-    filtered = filtered.filter(p => p.status === 'posted');
-  }
-  filtered.sort((a, b) => a.date.localeCompare(b.date) || (a.time||'').localeCompare(b.time||''));
-  return filtered;
-}
-
-function renderPost(post) {
-  const icon = PILLAR_ICONS[post.pillar] || '📌';
-  const statusTag = post.status === 'posted'
-    ? '<span class="tag tag-status tag-posted">Đã đăng</span>'
-    : '<span class="tag tag-status tag-pending">Chờ đăng</span>';
-
-  return `
-    <div class="content-item">
-      <div class="item-date">${formatDate(post.date)}<br><span class="mono" style="font-size:11px">${post.time || ''}</span></div>
-      <div class="item-body">
-        <p class="item-title">${icon} ${escHtml(post.title)}</p>
-        <p class="item-caption">${escHtml(post.caption || post.hook || '')}</p>
-        <div class="item-tags">
-          <span class="tag tag-pillar">${escHtml(post.pillar)}</span>
-          ${statusTag}
-          ${(post.hashtags||'').split(/\s+/).slice(0,3).map(h => h ? '<span class="tag tag-hashtag">'+escHtml(h)+'</span>' : '').join('')}
-        </div>
-      </div>
-      <div class="item-actions">
-        <button class="btn btn-icon btn-secondary" onclick="copyCaption('${post.id}')" title="Copy caption">📋</button>
-        <button class="btn btn-icon btn-secondary" onclick="toggleStatus('${post.id}')" title="${post.status==='posted'?'Đánh chưa đăng':'Đánh đã đăng'}">${post.status==='posted'?'↩':'✓'}</button>
-        <button class="btn btn-icon btn-secondary" onclick="openEditModal('${post.id}')" title="Sửa">✏️</button>
-        <button class="btn btn-icon btn-secondary" onclick="if(window.confirm?.('Xóa?')!==false||true)deletePost('${post.id}')" title="Xóa" style="color:var(--accent)">✕</button>
-      </div>
-    </div>`;
-}
-
-function render() {
-  // Stats
-  document.getElementById('statTotal').textContent = posts.length;
-  document.getElementById('statPending').textContent = posts.filter(p => p.status !== 'posted').length;
-  document.getElementById('statPosted').textContent = posts.filter(p => p.status === 'posted').length;
-  const thisWeek = getWeekRange(0);
-  document.getElementById('statWeek').textContent = posts.filter(p => {
-    const d = new Date(p.date + 'T00:00:00');
-    return d >= thisWeek.start && d <= thisWeek.end;
-  }).length;
-
-  // Week nav
-  const weekNav = document.getElementById('weekNav');
-  weekNav.hidden = currentTab !== 'calendar';
-  if (currentTab === 'calendar') {
-    document.getElementById('weekLabel').textContent = formatWeekLabel(getWeekRange(weekOffset));
-  }
-
-  // Tabs
-  document.querySelectorAll('.tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.tab === currentTab);
-  });
-
-  // List
-  const filtered = getFilteredPosts();
-  const list = document.getElementById('contentList');
-  if (filtered.length === 0) {
-    list.innerHTML = `<div class="empty-state">
-      <div class="empty-icon">📭</div>
-      <p style="font-weight:600">Chưa có bài nào</p>
-      <p style="font-size:13px">Nhấn "+ Thêm bài" để lên lịch content</p>
-    </div>`;
-  } else {
-    list.innerHTML = filtered.map(renderPost).join('');
+    save();
+    msg.innerHTML = `<div class="import-msg ok">✓ Đã nhập ${count} bài thành công!</div>`;
+    ta.value = '';
+    setTimeout(() => { switchTab('today'); }, 1200);
+  } catch(e) {
+    msg.innerHTML = `<div class="import-msg err">✕ JSON không hợp lệ: ${esc(e.message)}</div>`;
   }
 }
 
-function switchTab(tab) {
-  currentTab = tab;
-  render();
+function showTemplate() {
+  document.getElementById('templateArea').innerHTML = `<div class="template-block">[
+  {
+    "pillar": "Tổng hợp CT",
+    "date": "2026-11-09",
+    "time": "19:30",
+    "title": "Tổng hợp công thức Đạo hàm",
+    "hook": "80% thí sinh mất điểm vì quên công thức này!",
+    "caption": "Tổng hợp đầy đủ 12 công thức đạo hàm cần nhớ cho kỳ thi THPT...",
+    "cta": "Save lại để ôn thi!",
+    "hashtags": "#EduTok #LearnOnTikTok #ToánTHPT #ÔnThi2026",
+    "slideUrl": ""
+  }
+]</div>`;
 }
 
-function changeWeek(dir) {
-  if (dir === 0) weekOffset = 0;
-  else weekOffset += dir;
-  render();
+// == Connection ==
+function openSettings() { document.getElementById('settingsModal').hidden = false; }
+function closeSettings() { document.getElementById('settingsModal').hidden = true; }
+
+async function testConnection(silent = false) {
+  const url = document.getElementById('s-url').value.trim();
+  if (!url) {
+    if (!silent) showConnMsg('Vui lòng nhập URL Apps Script', false);
+    updateConnUI(false);
+    return;
+  }
+  state.scriptUrl = url;
+  try { localStorage.setItem('tk_url', url); } catch(e) {}
+  updateConnUI(null); // loading
+  try {
+    const res = await fetch(url + '?action=getAll', { redirect: 'follow' });
+    const data = await res.json();
+    if (Array.isArray(data)) {
+      state.connected = true;
+      state.posts = data.length ? data : state.posts;
+      save();
+      state.lastSync = new Date();
+      updateConnUI(true);
+      if (!silent) showConnMsg(`Kết nối thành công! ${data.length} bài từ Sheet.`, true);
+      render();
+    } else {
+      throw new Error('Response không phải array');
+    }
+  } catch(e) {
+    state.connected = false;
+    updateConnUI(false);
+    if (!silent) showConnMsg(`Lỗi: ${e.message}. Kiểm tra lại URL và quyền deploy.`, false);
+  }
 }
 
-function escHtml(s) {
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
+function disconnectSheet() {
+  state.scriptUrl = '';
+  state.connected = false;
+  try { localStorage.removeItem('tk_url'); } catch(e) {}
+  document.getElementById('s-url').value = '';
+  updateConnUI(false);
+  showConnMsg('Đã ngắt kết nối', false);
 }
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
+function updateConnUI(ok) {
+  const dot = document.getElementById('connDot');
+  const label = document.getElementById('connLabel');
+  dot.className = 'conn-dot' + (ok === true ? ' ok' : ok === false ? ' err' : '');
+  label.textContent = ok === true ? 'Đã kết nối' : ok === false ? 'Chưa kết nối' : 'Đang kết nối...';
 }
 
-// ---- Delete confirmation (confirm() returns false in artifact) ----
-// Handled inline: always delete since confirm returns false
+function showConnMsg(text, ok) {
+  document.getElementById('connMsg').innerHTML = `<div class="conn-status-msg ${ok ? 'ok' : 'err'}">${esc(text)}</div>`;
+}
 
-// ---- Init ----
-loadData();
-updateSetupUI();
-render();
+async function syncFromSheet() {
+  if (!state.scriptUrl || !state.connected) return;
+  try {
+    const res = await fetch(state.scriptUrl + '?action=getAll', { redirect: 'follow' });
+    const data = await res.json();
+    if (Array.isArray(data)) {
+      state.posts = data;
+      save();
+      state.lastSync = new Date();
+      render();
+    }
+  } catch(e) {}
+}
 
-// Close modal on overlay click
-document.getElementById('modalOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
+async function apiUpsert(post) {
+  if (!state.scriptUrl) return;
+  try {
+    await fetch(state.scriptUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'upsert', data: post }),
+      redirect: 'follow'
+    });
+  } catch(e) {}
+}
 
-// Close modal on Escape
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeModal();
-});
+async function apiDelete(id) {
+  if (!state.scriptUrl) return;
+  try {
+    await fetch(state.scriptUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'delete', id }),
+      redirect: 'follow'
+    });
+  } catch(e) {}
+}
+
+// == Week nav ==
+function moveWeek(dir) { state.weekStart.setDate(state.weekStart.getDate() + dir * 7); render(); }
+function goThisWeek() { state.weekStart = getMonday(new Date()); render(); }
+function getWeekPosts() {
+  const ws = fmtDate(state.weekStart);
+  const we = new Date(state.weekStart); we.setDate(we.getDate() + 6);
+  const wes = fmtDate(we);
+  return state.posts.filter(p => p.date >= ws && p.date <= wes);
+}
+
+// == Helpers ==
+function getMonday(d) { const dt = new Date(d); const day = dt.getDay(); dt.setDate(dt.getDate() - (day === 0 ? 6 : day - 1)); dt.setHours(0,0,0,0); return dt; }
+function fmtDate(d) { return d.toISOString().slice(0,10); }
+function fmtDateVi(d) { return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`; }
+function esc(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function attr(s) { return JSON.stringify(s).replace(/</g, '\\u003c'); }
+
+init();
 </script>
